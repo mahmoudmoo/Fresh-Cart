@@ -5,13 +5,19 @@ import { useFormik } from 'formik'
 import * as Yup from "yup"
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
-import { cartContext } from '../../Context/CartContextProvider'
+import { clearCart } from '../../redux/slices/cartSlice'
+import { useDispatch } from 'react-redux'
 export default function CreatCashOrder() {
+
   let { id } = useParams()
+
   let headers = { token: localStorage.getItem('token') }
+  let dispatch=useDispatch()
+
 const [loading,setloading]=useState(false)
-let {setcartnumber}=useContext(cartContext)
   let navigate = useNavigate()
+
+
   async function hundelCash(values) {
     setloading(true)
     let { data } = await axios.post(`https://route-ecommerce-app.vercel.app/api/v1/orders/${id}`, { values }, { headers })
@@ -19,8 +25,8 @@ let {setcartnumber}=useContext(cartContext)
     if (data.status === "success") {
       navigate('/MyOrders')
       setloading(false)
-      setcartnumber(0)
-    }
+      dispatch(clearCart()) 
+       }
   }
 
 

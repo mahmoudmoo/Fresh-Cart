@@ -2,42 +2,40 @@ import React, { useContext, useEffect, useState } from 'react'
 // import styles from './ProductsByCategories.module.css'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { cartContext } from '../../Context/CartContextProvider'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProductsBycate } from '../../redux/slices/proudctSlice'
+import { addToCart } from '../../redux/slices/cartSlice'
 
 
 export default function ProductsByCategories() {
   let { id } = useParams()
-  const [product, setproduct] = useState([])
-  const [isLoading, setisLoading] = useState(false)
-  let { addToCart } = useContext(cartContext)
+  let { proudctCateList, loading } = useSelector((state) => state.productReducer)
+  let disbatch = useDispatch()
 
-  async function getProductsByCategories() {
-    setisLoading(true)
-    let { data } = await axios(`https://route-ecommerce-app.vercel.app/api/v1/products?category[in][]=${id}`)
-    setproduct(data.data)
-    setisLoading(false)
-  }
+
+
   useEffect(() => {
-    getProductsByCategories()
+ disbatch(getProductsBycate(id))
   }, [])
 
 
   return <>
     <div className="container row mx-auto">
       <h2 className=' text-main mt-5 pt-5 text-center'>Products</h2>
-      {isLoading ? <div className='col-12 text-center my-5 py-5'><i className='fa fa-spin  fa-circle-notch  fa-10x  text-main'></i></div> : <>
+      {loading ? <div className='col-12 text-center my-5 py-5'><i className='fa fa-spin  fa-circle-notch  fa-10x  text-main'></i></div> : <>
 
 
-        {product.length == 0 ? <>
+        {proudctCateList?.length == 0 ? <>
 
-          <div className='text-center my-5'>
-            <h3 className='fw-bolder'>There are no products at the moment and will be available soon</h3>
+          <div className='  stretshHeight2 text-center'>
+            
+            <h3 className='fw-bolder mx-auto'>There are no products at the moment and will be available soon</h3>
           </div>
         </> : null}
 
 
 
-        {product.map((ele) => <div className="col-md-2 overflow-hidden" key={ele._id}>
+        {proudctCateList?.map((ele) => <div className="col-md-2 overflow-hidden" key={ele._id}>
           <div className="product py-3 px-2">
             <Link to={'/ProductDetails/' + ele._id}>
               <img src={ele.imageCover} className="w-100" />
@@ -48,7 +46,7 @@ export default function ProductsByCategories() {
                 <span><i className="fa fa-star rating-color"></i>{ele.ratingsAverage}</span>
               </div>
             </Link>
-            <button onClick={() => { addToCart(ele._id) }} className="btn bg-main w-100">+Add</button>
+            <button onClick={() => { disbatch(addToCart(ele._id)) }} className="btn bg-main w-100">+Add</button>
           </div>
         </div>
         )}</>}

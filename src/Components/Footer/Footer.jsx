@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './Footer.module.css'
 export default function Footer() {
   return <>
-  <div className='bg-light p-5'>
+  <div className='bg-light p-5 fotterr'>
     <h2 className='my-2'>Get the FreashChart app </h2>
     <p className='text-muted'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Corporis, modi?</p>
     <div className='row my-3'>

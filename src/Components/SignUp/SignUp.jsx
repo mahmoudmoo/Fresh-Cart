@@ -10,7 +10,10 @@ import { useNavigate } from 'react-router-dom'
 export default function SignUp() {
   const [loading,setloading]=useState(false)
   const [msgerr,setmsgerr]=useState('')
+
   let navigate=useNavigate()
+
+  
   async function handelSignUp(values) {
   setloading(true)
     let {data}=await axios.post('https://route-ecommerce-app.vercel.app/api/v1/auth/signup',values).catch((err)=>{
@@ -72,6 +75,7 @@ export default function SignUp() {
 
 // return errors
 // }
+
   let formik = useFormik({
     initialValues: {
       name: '',
@@ -85,7 +89,7 @@ export default function SignUp() {
   })
 
   return <>
-<div className="container mt-5 pt-5">
+<div className="container stretshHeight">
 
     <form onSubmit={formik.handleSubmit} className='w-75 mx-auto'>
 
@@ -115,7 +119,7 @@ export default function SignUp() {
       <input onBlur={formik.handleBlur} type="tel" name='phone' id='phone' value={formik.values.phone} onChange={formik.handleChange} className='form-control mb-2' />
       {formik.errors.phone && formik.touched.phone?<div className="alert alert-danger">{formik.errors.phone}</div>:null}
       
-      {loading?<button  tybe='button'className='btn bg-main text-white'><i className='fa fa-spinner fa-spin'></i></button>:<button disabled={!(formik.isValid && formik.dirty)} tybe='submit'className='btn bg-main text-white'>sign up</button>}
+      {loading?<button  tybe='button'className='btn bg-main text-white w-100 mt-3'><i className='fa fa-spinner fa-spin'></i></button>:<button disabled={!(formik.isValid && formik.dirty)} tybe='submit'className='btn bg-main text-white w-100 mt-3'>sign up</button>}
       
       
 

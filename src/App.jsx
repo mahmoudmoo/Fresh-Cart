@@ -14,36 +14,23 @@ import ProtectedRoutes from './Components/ProtectedRoutes/ProtectedRoutes'
 import ProductDetails from './Components/ProductDetails/ProductDetails'
 import ProductsByCategories from './Components/productsByCategories/productsByCategories'
 import ProductsByBrands from './Components/productsByBrands/productsByBrands'
-import CartContextProvider from './Context/CartContextProvider'
 import toast, { Toaster } from 'react-hot-toast';
-
 import axios from 'axios'
 import MyOrders from './Components/My-orders/My-orders'
 import CreatCashOrder from './Components/Creat-cash-order/Creat-cash-order'
-
+import { store } from './redux/store'
+import { Provider } from 'react-redux'
 export default function App() {
-  const [cartnumber, setcartnumber] = useState(0)
+  
   const [userData, setuserData] = useState(null)  
   let headers = { token: localStorage.getItem('token') }
-
-  async function getNumOnFirst() {
-    let res =await axios('https://route-ecommerce.onrender.com/api/v1/cart', { headers })
-    if (res.name === "AxiosError") {
-      setcartnumber(0)
-    } else {
-        setcartnumber(res?.data?.numOfCartItems)
-    }
-  }
-
+  
   function getToken() {
     setuserData(jwtDecode(localStorage.getItem('token')))
   }
-
   useEffect(() => {
     if (localStorage.getItem('token') != null) {
-      getToken()
-      getNumOnFirst()
-      // getcart()
+      getToken()      
     }
   }, [])
   let routers = createHashRouter([
@@ -62,22 +49,14 @@ export default function App() {
         { path: 'MyOrders', element: <ProtectedRoutes><MyOrders/></ProtectedRoutes> },
         { path: 'cart/CreatCashOrder/:id', element: <ProtectedRoutes><CreatCashOrder /></ProtectedRoutes> },
         { path: '*', element: <NotFound /> },
-
-
       ]
     }
   ])
-
   return <>
-
-    <CartContextProvider cartnumber={cartnumber} setcartnumber={setcartnumber}>
+<Provider store={store}>
       <RouterProvider router={routers}>
       </RouterProvider>
       <Toaster />
-    </CartContextProvider>
-
-
-
+</Provider>
   </>
-
 }

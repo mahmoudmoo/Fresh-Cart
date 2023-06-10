@@ -42,7 +42,7 @@ let formik=useFormik({
 })  
   
   return <>
-<div className="container mt-5 pt-5">
+<div className="container  stretshHeight">
 
   <form onSubmit={formik.handleSubmit} className="w-75 mx-auto my-5">
 
@@ -57,7 +57,7 @@ let formik=useFormik({
     <input type="password" id='password' name='password'className='form-control'onChange={formik.handleChange}onBlur={formik.handleBlur} />
     {formik.errors.password&&formik.touched.password?<div className="alert alert-danger">{formik.errors.password}</div>:null}
     
-    {loading?<button type='button' className='btn bg-main text-white'  ><i className='fa fa-spinner fa-spin'></i></button>:<button type='submit' className='btn bg-main text-white'disabled={!(formik.dirty&&formik.isValid)}>Login</button>}
+    {loading?<button type='button' className='btn bg-main text-white w-100 mt-3'  ><i className='fa fa-spinner fa-spin'></i></button>:<button type='submit' className='btn bg-main text-white w-100 mt-3'disabled={!(formik.dirty&&formik.isValid)}>Login</button>}
     
     
     

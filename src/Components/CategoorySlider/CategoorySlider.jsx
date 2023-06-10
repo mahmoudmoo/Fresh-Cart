@@ -3,6 +3,8 @@ import styles from './CategoorySlider.module.css'
 import Slider from 'react-slick';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCate } from '../../redux/slices/cateSlice';
 
 export default function CategoorySlider() {
   const settings = {
@@ -14,28 +16,27 @@ export default function CategoorySlider() {
     autoplay: true,
     autoplaySpeed: 1000,
   };
-  const [cate, setcate] = useState([])
-  const [isLoading, setisLoading] = useState(false)
 
-  async function getCate() {
-    setisLoading(true)
-    let { data } = await axios('https://route-ecommerce-app.vercel.app/api/v1/categories')
-    setcate(data.data)
-    setisLoading(false)
-  }
+
+  let { cateList, loading } = useSelector((state) => state.cateReducer)
+  let disbatch = useDispatch()
+
 
   useEffect(() => {
 
-    getCate()
+   disbatch(getCate())
+
+
+
 
   }, [])
 
 
 
   return <>
-{isLoading?<div className='col-11 text-center my-5 py-5'><i className='fa fa-spin  fa-circle-notch  fa-10x  text-main'></i></div>:
+{loading?<div className='col-11 text-center my-5 py-5'><i className='fa fa-spin  fa-circle-notch  fa-10x  text-main'></i></div>:
   <div className="col-11 mx-auto"><Slider {...settings}>
-  {cate.map((ele)=><div key={ele._id}>
+  {cateList.map((ele)=><div key={ele._id}>
     <Link to={'/productsByCategories/'+ele._id}>
     <div>
     <img src={ele.image} height={200}className='w-100'alt=''/>

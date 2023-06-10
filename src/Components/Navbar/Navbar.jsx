@@ -1,29 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './Navbar.module.css'
 import logo from '../../finalProject assets/freshcart-logo.svg'
-import { useContext } from 'react'
-import { cartContext } from '../../Context/CartContextProvider'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { clearCart, getCartItems } from '../../redux/slices/cartSlice'
 export default function Navbar({ userData, setuserData }) {
-
-  let { cartnumber, setcartnumber, setcartPrice } = useContext(cartContext)
+  let {cartNumber}=useSelector(store=>store.CartReducer)
+  let dispatch=useDispatch()
+  // let { cartnumber, setcartnumber, setcartPrice } = useContext(cartContext)
   function logOut() {
     setuserData(null)
-    setcartnumber(0)
-    setcartPrice(0)
+    dispatch(clearCart())
     localStorage.clear()
   }
-
+  useEffect(() => {
+    dispatch(getCartItems())
+  },[])
   return <>
-    <nav className="navbar navbar-expand-xl fixed-top navbar-light bg-light">
+    <nav className="navbar navbar-expand-xl  navbar-light bg-light">
       <div className="container">
-        
-       
         <Link className="navbar-brand" to="/">
           <img src={logo} alt="" />
         </Link>
-       
         <button className="navbar-toggler d-xl-none" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavId" aria-controls="collapsibleNavId"
           aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
@@ -33,7 +31,6 @@ export default function Navbar({ userData, setuserData }) {
             <li className="nav-item">
               <Link className="nav-link" to="/">Home</Link>
             </li>
-
             <li className="nav-item ">
               <Link className="nav-link" to="products">Products</Link>
             </li>
@@ -49,15 +46,15 @@ export default function Navbar({ userData, setuserData }) {
             <li className="nav-item ">
               <Link className="nav-link" to={'Cart'}><button type="button" class="btn btn-sm  position-relative">
                 <i className="fa-solid text-main  fa-cart-shopping"></i>
+                {cartNumber!=0?
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  {cartnumber}
-                  <span className="visually-hidden">unread messages</span>
-                </span>
+                  {cartNumber}
+                </span>:<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                </span>}
               </button></Link>
             </li>
           </ul>
             : null}
-
           <ul className="navbar-nav mt-2 mt-lg-0 text-center ms-auto">
             <li className="nav-item d-flex mx-auto align-items-center">
               <i className='fab fa-facebook mx-2'></i>
@@ -80,12 +77,9 @@ export default function Navbar({ userData, setuserData }) {
                 <li className="nav-item">
                   <Link onClick={logOut} className="nav-link" to={'login'}>LogOut</Link>
                 </li></>}
-
           </ul>
         </div>
       </div>
     </nav>
-
-
   </>
 }
